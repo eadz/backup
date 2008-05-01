@@ -9,32 +9,36 @@ module EngineYard
     RELEASES  = 5
     TIMESTAMP = "%Y%m%d%H%M%S"
     
+    # Pass this method a filename, Backup will set the directory it works in from this file
     def initialize(file)
       raise "No such file found" unless File.file?(file)
       @filename, @backups = file, []
     end
     
+    # Backup the current file, and keep X number of older versions
     def run
       backup_current
       delete_old_backups
     end
     
+    # Backup the current file only
     def backup_current
       FileUtils.mv(@filename, "#{@filename}.#{Time.now.strftime(TIMESTAMP)}")
     end
     
-    # Look for releases and delete the oldest ones outside of our RELEASES threshold
+    # Look for releases and delete the oldest ones outside of the X releases threshold
     def delete_old_backups
       find_all_releases
       delete_list = @backups - keep_list
       delete_list.each {|f| File.delete(f) }
     end
     
+    # Returns the list of files that will be kept
     def keep_list
       @backups[-RELEASES..-1]
     end
 
-    # Find all versions of our backup filename, which match file.TIMESTAMP
+    # Returns all versions of our backup filename, which match file.TIMESTAMP
     def find_all_releases
       Dir.chdir(File.dirname(@filename))
       backups = Dir.glob("#{File.basename(@filename)}.*")
