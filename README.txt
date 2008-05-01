@@ -23,8 +23,15 @@ None
 
 == INSTALL:
 
-git clone git://github.com/fearoffish/backup.git
-cd backup && rake gem:install
+RubyGems >= 1.1.1
+
+  $ sudo gem sources -a http://gems.github.com/ (you only need to do this once)
+  $ sudo gem install fearoffish-backup
+
+RubyGems < 1.1.1
+
+  $ sudo gem install fearoffish-backup --source=http://gems.github.com
+
 
 == LICENSE:
 
