@@ -12,10 +12,10 @@ FIXME: Make releases an instance variable, not a constant
 
 == SYNOPSIS:
 
-# Take the file and create a timestamped version of it
-# Keeping only the latest X number of backups
-backup = Backup.new("/my/file")
-backup.run
+  # Take the file and create a timestamped version of it
+  # Keeping only the latest X number of backups
+  backup = Backup.new("/my/file")
+  backup.run
 
 == REQUIREMENTS:
 
