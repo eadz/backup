@@ -3,8 +3,8 @@ LICENSE
 Manifest.txt
 README.txt
 Rakefile
+lib/backup.rb
 lib/backup/backup.rb
-lib/boot.rb
 spec/backup/backup_spec.rb
 spec/spec.opts
 spec/spec_helper.rb
