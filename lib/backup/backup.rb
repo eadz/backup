@@ -8,7 +8,10 @@ module EngineYard
     TIMESTAMP = "%Y%m%d%H%M%S"
     
     # Pass in a filename, Backup will set the directory it works in from this file
+    #   # default to keeping 5 releases
     #   Backup.new("/my/file")
+    #   # adjust the class to keep 3 releases
+    #   Backup.new("/my/file", 3)
     def initialize(file, releases = 5)
       raise "No such file found" unless File.file?(file)
       @filename, @backups = file, []
