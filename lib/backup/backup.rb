@@ -2,7 +2,8 @@ module EngineYard
   class Backup
     include FileUtils
         
-    attr_reader :filename, :backups, :releases
+    attr_reader :filename, :backups
+    attr_accessor :releases
     
     VERSION   = "0.0.1"
     TIMESTAMP = "%Y%m%d%H%M%S"

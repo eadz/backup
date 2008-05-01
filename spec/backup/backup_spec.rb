@@ -58,6 +58,13 @@ describe Backup do
                 my.cnf.20060430185242 my.cnf.20060420185242 ].reverse
           )
         end
+        
+        it "should keep the 3 newest releases when creating a new backup that has a releases parameter" do
+          @backup.releases = 3
+          @backup.keep_list.should eql(
+            %w[ my.cnf.20080430185243 my.cnf.20080430185242 my.cnf.20070430185242 ].reverse
+          )
+        end
       
       end
       
