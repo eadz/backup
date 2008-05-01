@@ -2,17 +2,17 @@ module EngineYard
   class Backup
     include FileUtils
         
-    attr_reader :filename, :backups
+    attr_reader :filename, :backups, :releases
     
     VERSION   = "0.0.1"
-
-    RELEASES  = 5
     TIMESTAMP = "%Y%m%d%H%M%S"
     
-    # Pass this method a filename, Backup will set the directory it works in from this file
-    def initialize(file)
+    # Pass in a filename, Backup will set the directory it works in from this file
+    #   Backup.new("/my/file")
+    def initialize(file, releases = 5)
       raise "No such file found" unless File.file?(file)
       @filename, @backups = file, []
+      @releases = releases
     end
     
     # Backup the current file, and keep X number of older versions
@@ -35,7 +35,7 @@ module EngineYard
     
     # Returns the list of files that will be kept
     def keep_list
-      @backups[-RELEASES..-1]
+      @backups[-@releases..-1]
     end
 
     # Returns all versions of our backup filename, which match file.TIMESTAMP
