@@ -1,7 +1,7 @@
 # $Id$
 
 require File.join(File.dirname(__FILE__), %w[.. spec_helper])
-require 'lib/boot.rb'
+require 'lib/backup.rb'
 
 include EngineYard
 
