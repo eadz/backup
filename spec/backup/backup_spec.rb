@@ -31,6 +31,13 @@ describe Backup do
         File.should_receive(:delete).with(/^my.cnf./).exactly(4).times.and_return(1)
         @backup.run
       end
+      
+      it "should not raise errors with zero current backups" do
+        Dir.stub!(:glob).and_return( [] )
+        FileUtils.should_receive(:mv).exactly(1).times
+        File.should_receive(:delete).with(/^my.cnf./).exactly(0).times.and_return(1)
+        @backup.run
+      end
     
       describe "which returns a valid glob of files" do
       

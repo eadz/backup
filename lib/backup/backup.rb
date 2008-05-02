@@ -39,7 +39,7 @@ module EngineYard
     
     # Returns the list of files that will be kept
     def keep_list
-      @backups[-@releases..-1]
+      @backups.empty? ? [] : @backups[-@releases..-1]
     end
 
     # Returns all versions of our backup filename, which match file.TIMESTAMP
