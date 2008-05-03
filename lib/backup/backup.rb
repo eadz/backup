@@ -5,7 +5,7 @@ module EngineYard
     attr_reader :filename, :backups
     attr_accessor :releases
     
-    VERSION   = "0.0.1"
+    VERSION   = "0.0.2"
     TIMESTAMP = "%Y%m%d%H%M%S"
     
     # Pass in a filename, Backup will set the directory it works in from this file
@@ -20,18 +20,13 @@ module EngineYard
     end
     
     # Backup the current file, and keep X number of older versions
-    def run
-      backup_current
-      delete_old_backups
-    end
-    
-    # Backup the current file only
-    def backup_current
-      FileUtils.mv(@filename, "#{@filename}.#{Time.now.strftime(TIMESTAMP)}")
+    def run(delete = :yes)
+      move_current
+      cleanup unless delete == :no_delete
     end
     
     # Look for releases and delete the oldest ones outside of the X releases threshold
-    def delete_old_backups
+    def cleanup
       find_all_releases
       delete_list.each {|f| File.delete(f) }
     end
@@ -77,6 +72,10 @@ module EngineYard
     
     def date_from(string)
       DateTime.strptime(string, TIMESTAMP)
+    end
+    
+    def move_current
+      FileUtils.mv(@filename, "#{@filename}.#{Time.now.strftime(TIMESTAMP)}")
     end
         
   end

@@ -64,6 +64,13 @@ describe Backup do
           backup.find_all_releases
           backup.keep_list.should == valid_backups(4, :chronological)
         end
+        
+        it "should not delete old files if told not to" do
+          backup = Backup.new("my.cnf", 4)
+          FileUtils.should_receive(:mv).exactly(1).times
+          backup.should_receive(:delete_old_backups).exactly(0).times
+          backup.run(:no_delete)
+        end
       
       end
       
