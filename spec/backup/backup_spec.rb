@@ -70,9 +70,7 @@ describe Backup do
       describe "which returns an invalid glob of files" do
       
         before(:each) do
-          Dir.stub!(:glob).and_return(
-            %w[ my.cnf.2005a85242 my.cnf.20080430185243 my.cnf.20080430185242 ]
-          )
+          Dir.stub!(:glob).and_return( invalid_backups(3)  )
         end
       
         it "should handle incorrectly named files gracefully" do
