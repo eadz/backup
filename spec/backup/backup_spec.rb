@@ -1,11 +1,14 @@
 # $Id$
 
-require File.join(File.dirname(__FILE__), %w[.. spec_helper])
+require File.join(File.dirname(__FILE__), %w[ .. spec_helper ])
+require File.join(File.dirname(__FILE__), %w[ backup_helper ])
 require 'lib/backup.rb'
 
 include EngineYard
 
 describe Backup do
+  
+  include BackupHelper
   
   describe "when initialized" do
     it "should take 1 argument of a filename" do
@@ -18,11 +21,7 @@ describe Backup do
     describe "and passed a valid filename" do
       before(:each) do
         File.should_receive(:file?).any_number_of_times.and_return(true)
-        Dir.stub!(:glob).and_return(
-          %w[ my.cnf.20050430185242 my.cnf.20080430185243 my.cnf.20080430185242 
-              my.cnf.20060420185242 my.cnf.20070430185242 my.cnf.20060430185242
-              my.cnf.20060410185242 my.cnf.20040430185242 my.cnf.20050430185242 ]
-        )
+        Dir.stub!(:glob).and_return( valid_backups )
         @backup = Backup.new("my.cnf")
       end
       
@@ -42,43 +41,28 @@ describe Backup do
       describe "which returns a valid glob of files" do
       
         before(:each) do
-          Dir.stub!(:glob).and_return(
-            %w[ my.cnf.20050430185242 my.cnf.20080430185243 my.cnf.20080430185242 
-                my.cnf.20060420185242 my.cnf.20070430185242 my.cnf.20060430185242
-                my.cnf.20060410185242 my.cnf.20040430185242 my.cnf.20050430185241 ]
-          )
+          Dir.stub!(:glob).and_return( valid_backups )
           @backup = Backup.new("my.cnf")
           @backup.find_all_releases
         end
       
         it "should sort them into chronological order" do
-          @backup.backups.should eql(
-            %w[ my.cnf.20080430185243 my.cnf.20080430185242 my.cnf.20070430185242
-                my.cnf.20060430185242 my.cnf.20060420185242 my.cnf.20060410185242 
-                my.cnf.20050430185241 my.cnf.20050430185242 my.cnf.20040430185242 ].reverse
-          )
+          @backup.backups.should == valid_backups(9, :chronological)
         end
       
         it "should keep the 5 newest releases when creating a new backup" do
-          @backup.keep_list.should eql(
-            %w[ my.cnf.20080430185243 my.cnf.20080430185242 my.cnf.20070430185242
-                my.cnf.20060430185242 my.cnf.20060420185242 ].reverse
-          )
+          @backup.keep_list.should == valid_backups(5, :chronological)
         end
         
         it "should keep the 3 newest releases when creating a new backup that has releases set to 3" do
           @backup.releases = 3
-          @backup.keep_list.should eql(
-            %w[ my.cnf.20080430185243 my.cnf.20080430185242 my.cnf.20070430185242 ].reverse
-          )
+          @backup == valid_backups(3, :chronological)
         end
         
         it "should keep the 4 newest releases when creating a new backup that has a releases parameter of 4" do
           backup = Backup.new("my.cnf", 4)
           backup.find_all_releases
-          backup.keep_list.should eql(
-            %w[ my.cnf.20080430185243 my.cnf.20080430185242 my.cnf.20070430185242 my.cnf.20060430185242 ].reverse
-          )
+          backup.keep_list.should == valid_backups(4, :chronological)
         end
       
       end
