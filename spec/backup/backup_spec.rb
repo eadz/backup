@@ -69,11 +69,8 @@ describe Backup do
       
       describe "which returns an invalid glob of files" do
       
-        before(:each) do
-          Dir.stub!(:glob).and_return( invalid_backups(3)  )
-        end
-      
         it "should handle incorrectly named files gracefully" do
+          Dir.stub!(:glob).and_return( invalid_backups(3) )
           lambda { Backup.new("my.cnf") }.should_not raise_error(ArgumentError)
         end
       
