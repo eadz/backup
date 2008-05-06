@@ -14,34 +14,36 @@ describe Backup do
     it "should take 1 argument of a filename" do
       lambda { Backup.new }.should raise_error(ArgumentError)
       lambda { Backup.new("something") }.should raise_error("No such file found")
-      File.should_receive(:file?).any_number_of_times.and_return(true)
+      File.expects(:file?).returns(true)
       lambda { Backup.new("something") }.should_not raise_error
     end
     
     describe "and passed a valid filename" do
       before(:each) do
-        File.should_receive(:file?).any_number_of_times.and_return(true)
-        Dir.stub!(:glob).and_return( valid_backups )
+        File.expects(:file?).at_least_once.returns(true)
+        Dir.stubs(:glob).returns( valid_backups )
         @backup = Backup.new("my.cnf")
       end
       
       it "should save a new file and delete all backups out of the threshold" do
-        FileUtils.should_receive(:mv).exactly(1).times
-        File.should_receive(:delete).with(/^my.cnf./).exactly(4).times.and_return(1)
+        FileUtils.expects(:mv).times(1)
+        valid_backups(9, :chronological).last(4).each do |backup|
+          File.expects(:delete).with(backup).returns(1)
+        end
         @backup.run
       end
       
       it "should not raise errors with zero current backups" do
-        Dir.stub!(:glob).and_return( [] )
-        FileUtils.should_receive(:mv).exactly(1).times
-        File.should_receive(:delete).with(/^my.cnf./).exactly(0).times.and_return(1)
+        Dir.stubs(:glob).returns( [] )
+        FileUtils.expects(:mv)
+        File.expects(:delete).times(0).returns(1)
         @backup.run
       end
     
       describe "which returns a valid glob of files" do
       
         before(:each) do
-          Dir.stub!(:glob).and_return( valid_backups )
+          Dir.stubs(:glob).returns( valid_backups )
           @backup = Backup.new("my.cnf")
           @backup.find_all_releases
         end
@@ -70,7 +72,7 @@ describe Backup do
       describe "which returns an invalid glob of files" do
       
         it "should handle incorrectly named files gracefully" do
-          Dir.stub!(:glob).and_return( invalid_backups(3) )
+          Dir.stubs(:glob).returns( invalid_backups(3) )
           lambda { Backup.new("my.cnf") }.should_not raise_error(ArgumentError)
         end
       
