@@ -7,8 +7,7 @@ A library to keep the latest X number of a file as backups
 
 == FEATURES/PROBLEMS:
 
-FIXME: The spec for checking it backs up the latest X files, passes no matter what
-FIXME: Make releases an instance variable, not a constant
+None as yet.
 
 == SYNOPSIS:
 
