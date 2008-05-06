@@ -5,7 +5,7 @@ module EngineYard
     attr_reader :filename, :backups
     attr_accessor :releases
     
-    VERSION   = "0.0.1"
+    VERSION   = "0.0.2"
     TIMESTAMP = "%Y%m%d%H%M%S"
     
     # Pass in a filename, Backup will set the directory it works in from this file
