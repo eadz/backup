@@ -33,24 +33,33 @@ module EngineYard
     # Look for releases and delete the oldest ones outside of the X releases threshold
     def delete_old_backups
       find_all_releases
-      delete_list = @backups - keep_list
       delete_list.each {|f| File.delete(f) }
     end
     
-    # Returns the list of files that will be kept
+    # Returns an array of files that will be kept
     def keep_list
-      @backups[-@releases..-1]
+      @backups.first(@releases)
+    end
+    
+    # Returns an array of files that will be deleted
+    def delete_list
+      @backups - keep_list
     end
 
-    # Returns all versions of our backup filename, which match file.TIMESTAMP
-    def find_all_releases
+    # Returns all versions of our backup filename that match file.TIMESTAMP
+    # Optional return format (:datetime)
+    def find_all_releases(format = :filename)
       Dir.chdir(File.dirname(@filename))
       backups = Dir.glob("#{File.basename(@filename)}.*")
       remove_faults(backups)
-      backups.sort! do |x,y| 
-        Date.strptime(x.split(".").last, TIMESTAMP) <=> Date.strptime(y.split(".").last, TIMESTAMP)
-      end
+      backups.sort! { |x,y| date_from(y.split(".").last) <=> date_from(x.split(".").last) }
       @backups = backups
+      case format
+      when :datetime
+        @backups.collect { |b| d = date_from(b.split(".").last); d.strftime("%Y/%m/%d %H:%M:%S") }
+      when :filename
+        backups
+      end
     end
 
   private    
@@ -64,6 +73,10 @@ module EngineYard
         end
       end
       backups
+    end
+    
+    def date_from(string)
+      DateTime.strptime(string, TIMESTAMP)
     end
         
   end
