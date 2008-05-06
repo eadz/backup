@@ -12,4 +12,5 @@ Gem::Specification.new do |s|
   s.test_files = ["spec/backup/backup_spec.rb"]
   s.rdoc_options = ["--main", "README.txt"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt"]
+  s.add_dependency("mocha", ["> 0.5.6"])
 end
