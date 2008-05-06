@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name = "backup"
-  s.version = "0.0.1"
-  s.date = "2008-05-01"
-  s.summary = "A library to keep the latest X number of a file as backups"
+  s.version = "0.0.2"
+  s.date = "2008-05-06"
+  s.summary = "A library that allows you to backup a file from within your own code."
   s.email = "jvandyke@engineyard.com"
   s.homepage = "http://github.com/engineyard/backup"
   s.description = "Backup is a Ruby library to ease the backup of files, keeping the latest X releases.  Just require it and go."
