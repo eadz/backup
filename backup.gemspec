@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.date = "2008-05-01"
   s.summary = "A library to keep the latest X number of a file as backups"
   s.email = "jvandyke@engineyard.com"
-  s.homepage = "http://github.com/fearoffish/backup"
+  s.homepage = "http://github.com/engineyard/backup"
   s.description = "Backup is a Ruby library to ease the backup of files, keeping the latest X releases.  Just require it and go."
   s.has_rdoc = true
   s.authors = ["Jamie van Dyke"]
