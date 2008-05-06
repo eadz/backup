@@ -18,7 +18,7 @@ None as yet.
 
 == REQUIREMENTS:
 
-None
+mocha
 
 == INSTALL:
 
