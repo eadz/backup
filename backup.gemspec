@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = "backup"
-  s.version = "0.0.2"
-  s.date = "2008-05-06"
+  s.version = "0.0.3"
+  s.date = "2008-05-21"
   s.summary = "A library that allows you to backup a file from within your own code."
   s.email = "jvandyke@engineyard.com"
   s.homepage = "http://github.com/engineyard/backup"

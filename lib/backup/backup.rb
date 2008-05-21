@@ -5,7 +5,7 @@ module EngineYard
     attr_reader :filename, :backups
     attr_accessor :releases
     
-    VERSION   = "0.0.2"
+    VERSION   = "0.0.3"
     TIMESTAMP = "%Y%m%d%H%M%S"
     
     # Pass in a filename, Backup will set the directory it works in from this file
@@ -14,7 +14,7 @@ module EngineYard
     #   # adjust the class to keep 3 releases
     #   Backup.new("/my/file", 3)
     def initialize(file, releases = 5)
-      raise "No such file found" unless File.file?(file)
+      raise Errno::ENOENT, "#{file}", caller unless File.file?(file)
       @filename, @backups = file, []
       @releases = releases
     end
