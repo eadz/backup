@@ -1,11 +1,10 @@
 module EngineYard
   class Backup
-    include FileUtils
         
     attr_reader :filename, :backups
     attr_accessor :releases
     
-    VERSION   = "0.0.2"
+    VERSION   = "0.0.3"
     TIMESTAMP = "%Y%m%d%H%M%S"
     
     # Pass in a filename, Backup will set the directory it works in from this file
@@ -14,15 +13,18 @@ module EngineYard
     #   # adjust the class to keep 3 releases
     #   Backup.new("/my/file", 3)
     def initialize(file, releases = 5)
-      raise "No such file found" unless File.file?(file)
+      raise Errno::ENOENT, "#{file}", caller unless File.file?(file)
       @filename, @backups = file, []
       @releases = releases
     end
     
     # Backup the current file, and keep X number of older versions
-    def run(delete = :yes)
-      move_current
-      cleanup unless delete == :no_delete
+    # Options:
+    # + operation = :move or :copy
+    # + skip_cleanup = :yes or :no
+    def run(operation = :copy, skip_cleanup = :no)
+      move_current if operation == :move
+      cleanup unless skip_cleanup == :yes
     end
     
     # Look for releases and delete the oldest ones outside of the X releases threshold

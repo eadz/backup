@@ -7,8 +7,7 @@ A library to keep the latest X number of a file as backups
 
 == FEATURES/PROBLEMS:
 
-FIXME: The spec for checking it backs up the latest X files, passes no matter what
-FIXME: Make releases an instance variable, not a constant
+None as yet.
 
 == SYNOPSIS:
 
@@ -19,18 +18,18 @@ FIXME: Make releases an instance variable, not a constant
 
 == REQUIREMENTS:
 
-None
+mocha
 
 == INSTALL:
 
 RubyGems >= 1.1.1
 
   $ sudo gem sources -a http://gems.github.com/ (you only need to do this once)
-  $ sudo gem install fearoffish-backup
+  $ sudo gem install engineyard-backup
 
 RubyGems < 1.1.1
 
-  $ sudo gem install fearoffish-backup --source=http://gems.github.com
+  $ sudo gem install engineyard-backup --source=http://gems.github.com
 
 
 == LICENSE:
