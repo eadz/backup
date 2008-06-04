@@ -1,5 +1,5 @@
 backup
-    by Jamie van Dyke - Engine Yard Inc.
+    by Engine Yard Inc.
 
 == DESCRIPTION:
 
