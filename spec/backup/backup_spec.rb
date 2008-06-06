@@ -25,7 +25,8 @@ describe Backup do
       end
       
       it "should save a new file and delete all backups out of the threshold" do
-        FileUtils.expects( :mv ).times( 1 )
+        FileUtils.expects( :mv ).times( 0 )
+        FileUtils.expects( :cp ).times( 1 )
         valid_backups( 9, :chronological ).last( 4 ).each do |backup|
           File.expects( :delete ).with( backup ).returns( 1 )
         end
@@ -33,8 +34,9 @@ describe Backup do
       end
       
       it "should not raise errors with zero current backups" do
+        FileUtils.expects( :mv ).times( 0 )
+        FileUtils.expects( :cp ).times( 1 )
         Dir.stubs( :glob ).returns( [] )
-        FileUtils.expects( :mv )
         File.expects( :delete ).times( 0 ).returns( 1 )
         @backup.run
       end
@@ -49,7 +51,7 @@ describe Backup do
         it "should sort them into chronological order" do
           @backup.backups.should == valid_backups( 9, :chronological )
         end
-      
+              
         it "should keep the 5 newest releases when creating a new backup" do
           @backup.keep_list.should == valid_backups( 5, :chronological )
         end
@@ -65,11 +67,18 @@ describe Backup do
           backup.keep_list.should == valid_backups( 4, :chronological )
         end
         
-        it "should not delete old files if told not to" do
-          backup = Backup.new( "ey_my.cnf", 4 )
+        it "should by default, copy the file not move" do
           FileUtils.expects( :mv ).times( 0 )
-          backup.expects( :delete_old_backups ).times( 0 )
-          backup.run( :move )
+          FileUtils.expects( :cp ).times( 1 )
+          File.expects( :delete ).times( 4 )
+          @backup.run
+        end
+        
+        it "should delete the original file if told to move instead of copy" do
+          FileUtils.expects( :mv ).times( 1 )
+          FileUtils.expects( :cp ).times( 0 )
+          File.expects( :delete ).times( 4 )
+          @backup.run( :move )
         end
       end
       

@@ -4,7 +4,7 @@ module EngineYard
     attr_reader :filename, :backups
     attr_accessor :releases
     
-    VERSION   = "0.0.3"
+    VERSION   = "0.0.4"
     TIMESTAMP = "%Y%m%d%H%M%S"
     
     # Pass in a filename, Backup will set the directory it works in from this file
@@ -12,7 +12,8 @@ module EngineYard
     #   Backup.new("/my/file")
     #   # adjust the class to keep 3 releases
     #   Backup.new("/my/file", 3)
-    def initialize(file, releases = 5)
+    def initialize( file, releases = 5 )
+      debug "initialized with #{file} and handling #{releases} releases"
       raise Errno::ENOENT, "#{file}", caller unless File.file?(file)
       @filename, @backups = file, []
       @releases = releases
@@ -22,20 +23,22 @@ module EngineYard
     # Options:
     # + operation = :move or :copy
     # + skip_cleanup = :yes or :no
-    def run(operation = :copy, skip_cleanup = :no)
-      move_current if operation == :move
+    def run( operation = :copy, skip_cleanup = :no )
+      debug "operation is #{operation.to_s}"
+      debug "skip_cleanup is #{skip_cleanup.to_s}"
+      move_current( operation )
       cleanup unless skip_cleanup == :yes
     end
     
     # Look for releases and delete the oldest ones outside of the X releases threshold
     def cleanup
       find_all_releases
-      delete_list.each {|f| File.delete(f) }
+      delete_list.each {|f| File.delete( f ) }
     end
     
     # Returns an array of files that will be kept
     def keep_list
-      @backups.first(@releases)
+      @backups.first( @releases )
     end
     
     # Returns an array of files that will be deleted
@@ -53,7 +56,7 @@ module EngineYard
       @backups = backups
       case format
       when :datetime
-        @backups.collect { |b| d = date_from(b.split(".").last); d.strftime("%Y/%m/%d %H:%M:%S") }
+        @backups.collect { |b| d = date_from(b.split(".").last); d.strftime(TIMESTAMP) }
       when :filename
         backups
       end
@@ -62,13 +65,15 @@ module EngineYard
   private    
 
     def remove_faults(backups)
+      remove_list = []
       backups.each do |backup|
         begin
           Date.strptime(backup.split(".").last, TIMESTAMP)
         rescue ArgumentError
-          backups.delete(backup)
+          remove_list << backup
         end
       end
+      backups -= remove_list
       backups
     end
     
@@ -76,8 +81,13 @@ module EngineYard
       DateTime.strptime(string, TIMESTAMP)
     end
     
-    def move_current
-      FileUtils.mv(@filename, "#{@filename}.#{Time.now.strftime(TIMESTAMP)}")
+    def move_current( operation = :move )
+      case operation
+      when :move
+        FileUtils.mv(@filename, "#{@filename}.#{Time.now.strftime(TIMESTAMP)}")
+      when :copy
+        FileUtils.cp(@filename, "#{@filename}.#{Time.now.strftime(TIMESTAMP)}")
+      end
     end
         
   end
