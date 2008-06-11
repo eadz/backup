@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = "backup"
-  s.version = "0.0.3"
-  s.date = "2008-05-21"
+  s.version = "0.0.4"
+  s.date = "2008-06-11"
   s.summary = "A library that allows you to backup a file from within your own code."
   s.email = "jvandyke@engineyard.com"
   s.homepage = "http://github.com/engineyard/backup"
@@ -12,5 +12,4 @@ Gem::Specification.new do |s|
   s.test_files = ["spec/backup/backup_spec.rb"]
   s.rdoc_options = ["--main", "README.txt"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt"]
-  s.add_dependency("mocha", [">= 0.5.6"])
 end
